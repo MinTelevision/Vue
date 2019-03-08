@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        img {
+            width: 100px
+        }
+    </style>
+    <div id="demo">
+        <p style="color:red">1.v-for</p>
+        <!-- for in  -->
+        <ul>
+            <li v-for="a in arr" v-if="a.age>16">
+                <p v-text="`姓名:${a.name} 年龄:${a.age}`"></p>
+                <p v-text="a.imgs.length===0?'无图':''"></p>
+                <img v-for="i in a.imgs" :src="i" />
+            </li>
+        </ul>
+    </div>
+    <script src="../../js/vue.js"></script>
+    <script>
+        new Vue({
+            el: "#demo",
+            data: {
+                arr: [{
+                    name: "lemon",
+                    age: 18,
+                    imgs: ['./imgs/lemon.png']
+                }, {
+                    name: "laotian",
+                    age: 17,
+                    imgs: []
+                }, {
+                    name: "laoxie",
+                    age: 19,
+                    imgs: ['./imgs/handsome.jpeg', './imgs/laoxie.jpg']
+                }]
+            }
+        })
+    </script>
+</body>
+
+</html>

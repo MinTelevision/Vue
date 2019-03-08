@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        .red {
+            color: red
+        }
+    </style>
+    <div id="demo">
+        <p style="color:red">1.v-model</p>
+        <p v-text="name"></p>
+        <input v-model="name" />
+        <!-- <select></select> -->
+        <!-- <textarea></textarea> -->
+        <p style="color:red">2.@xxx</p>
+        <button @click="changeData('abc')">ok</button>
+    </div>
+    <script src="../../js/vue.js"></script>
+    <script>
+        new Vue({
+            el: "#demo",
+            data: {
+                name: "lemon"
+            },
+            methods:{
+                changeData(data){
+                    this.name = data
+                }
+            }
+        })
+        // View <= Element(Model)
+    </script>
+</body>
+</html>

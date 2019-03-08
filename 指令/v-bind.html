@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        .red {
+            color: red
+        }
+    </style>
+    <div id="demo">
+        <p style="color:red">1.v-bind</p>
+        <p v-bind:abc="name">属性值</p>
+        <p :abc="name">abc</p>
+        <p v-bind:class="{
+            'red':!bool
+        }">class</p>
+        <p v-bind:style="objCss">style</p>
+        <!-- v-bind: 等价于 : -->
+    </div>
+    <script src="../../js/vue.js"></script>
+    <script>
+        new Vue({
+            el: "#demo",
+            data: {
+                name: "zihao",
+                bool: true,
+                objCss: {
+                    color: 'red',
+                    fontSize: '28px'
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

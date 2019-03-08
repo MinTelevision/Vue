@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="demo">
+        <p style="color:red">1.v-on</p>
+        <!-- <button v-on:click="testClick">OK</button> -->
+        <p v-text="name"></p>
+        <button @click="testClick">OK</button>
+        <!-- onclick="testClick()" -->
+        <!-- v-on:等价于@ -->
+    </div>
+    <script src="../../js/vue.js"></script>
+    <script>
+        var vm = new Vue({
+            el: "#demo",
+            data: {
+                name: "lemon",
+                bool: true
+            },
+            // 选项 存储一些方法
+            methods:{
+                testClick(){
+                    this.name = "laoxie"
+                    console.log("你触发了点击事件")
+                }
+            }
+        })
+        console.log(vm)
+    </script>
+</body>
+</html>

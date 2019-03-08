@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- View -->
+    <!-- 指令 就是 vue特定的属性值 -->
+    <div id="demo">
+        <p style="color:red">1.v-show</p>
+        <!-- 接受布尔值 -->
+        <!-- 节点的增或者删 -->
+        <!-- 真 该节点显示 $().remove() -->
+        <!-- 假 该节点隐藏 $().append() -->
+        <!-- 状态比较单一使用 -->
+        <p v-if="type==='A'" v-text="name"></p>
+        <div v-else-if="type === 'B'">
+            B
+        </div>
+        <div v-else>
+            Now you don't
+        </div>
+    </div>
+    <script src="../../js/vue.js"></script>
+    <script>
+        new Vue({
+            el: "#demo",
+            data: {
+                name: "lemon",
+                bool: 1,
+                type: 'A'
+            }
+        })
+    </script>
+    <!-- V = Fn(M) -->
+</body>
+
+</html>
