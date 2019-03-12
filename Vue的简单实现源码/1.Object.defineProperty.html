@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 需要三个参数 第一个参数是放需要监听的对象
+        // 第二个参数是监听对象的属性值
+        // 里面会放一些配置项,里面有两个配置项非常重要 一个叫set回调函数，一个叫get回调函数
+
+        let data = {
+            name: "laoyao"
+        }
+        // 就是第二个参数是一个字符串
+        Object.defineProperty(data, "name", {
+            // 当你更改data.name触发set的回调函数
+            // data.name = "lemon"
+            // this.name = "xxx"
+            set(newValue) {
+                console.log("值发生了更改",newValue)
+            },
+            // 当你获取data.name触发get的回调函数
+            // console.log(data.name)
+            get() {
+                console.log("我查看了该值")
+            }
+        })
+        // 就会触发set，并且newValue获取到lemon
+        // data.name = "lemon"
+
+        // 我在这里面利用了set和get，只要我去改或者查Object.defineProperty的对象，我就会触发对应的set和get的回调
+
+    </script>
+</body>
+
+</html>

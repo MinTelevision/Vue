@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- V -->
+    <div id="demo">
+        {{name}}
+        <p>{{name}}</p>
+        <input v-m="name" />
+        <div v-h="html"></div>
+        <div v-f="a in arr"></div>
+    </div>
+    <script>
+        // 构造函数
+        // function Vue(obj){
+        //     this.$el = obj.el;
+        //     this.$data = obj.data;
+        // }
+        // class写法
+        class Vue {
+            constructor(props) {
+                // 数据和模板都没有
+                this.beforeCreated = props.beforeCreated;
+                this.beforeCreated()
+                
+                console.log(props)
+                // 这个是Vue实例化的节点 Vue的作用域
+                let el = this.$el = document.querySelector(props.el)
+                // 获取实例化后，放进来的data
+                // 方便在后面监听所有的这些数据
+                let data = this.$data = props.data
+
+                // 利用发布订阅模式把M和V  数据劫持和视图编译建立关系
+                let watch = this.$watch = new Observer()
+
+                // 数据劫持  M
+                Object.keys(data).forEach((key) => {
+                    this.proxyData(key)
+                })
+                // 视图编译  V
+                this.compile(el)
+
+                this.mounted = props.mounted
+                this.mounted()
+            }
+            // 遍历整个对象，并对所有的数据进行一次劫持
+            proxyData(key) {
+                let self = this
+                // 在这里Vue选择劫持整个实例化后的对象，而非this.$data
+                Object.defineProperty(self, key, {
+                    // 数据一旦变动，我们触发了set的回调，视图就会发生改变
+                    // 响应数据的改变触发对应的set和get完成对应逻辑
+                    set(newValue) {
+                        // 一旦值改变this.$data的值也响应改变
+                        self.$data[key] = newValue;
+                        console.log("值发生了更改", newValue)
+                        // 发布者
+                        this.$watch.emit(key, null)
+                    },
+                    get() {
+                        console.log("我查看了该值")
+                        return self.$data[key]
+                    }
+                })
+            }
+            // 编译模板
+            // 就是把所有的el节点下的{{name}} v-for给编译解析，
+            // {{name}} ---》 laoyao
+            compile(el) {
+                let nodes = el.childNodes
+                for (let node of nodes) {
+                    // console.log(node)
+                    // 区分文本节点还是元素节点
+                    switch (node.nodeType) {
+                        // 处理元素节点
+                        case 1:
+                            // 判断该节点是否有v-model这个属性值
+                            if (node.hasAttribute('v-m')) {
+                                let attrVal = node.getAttribute('v-m')
+                                node.value = this[attrVal]
+                                // 监听输入事件
+                                node.addEventListener("input", () => {
+                                    // 把v-model="name"  的 name值获取回来
+                                    
+                                    // 获取输入框的值
+                                    // node.value = this[attrVal];
+                                    this[attrVal] = node.value;
+                                    // node.removeAttribute('v-m')
+                                    console.log(attrVal)
+                                    return () => {
+                                        // 更新name的值，并把值放进this.name
+                                        this[attrVal] = node.value
+                                    }
+                                })
+                            }else if(node.hasAttribute('v-h')){
+                                let attrVal = node.getAttribute('v-h')
+                                node.innerHTML = this[attrVal]
+                            }else if(node.hasAttribute('v-f')){
+                                let attrVal = node.getAttribute('v-h')
+                                node.innerHTML = this[attrVal]
+                            }
+                            // this.compileElement(node)
+                            // 处理文本节点
+                        case 3:
+                            this.compileText(node, 'textContent')
+
+                    }
+                }
+            }
+            // 处理文本节点函数
+            compileText(node, type) {
+                let self = this;
+                let reg = /\{\{((?:.|\r?\n)+?)\}\}/g;
+                let txt = node.textContent
+                console.log(txt)
+                // 把所有的{{xxxx}}取出来xxxx
+                // node.textContent = this[value]
+                if (reg.test(txt)) {
+                    // {{name}}  ->  laoyao
+                    node.textContent = txt.replace(reg, (matched, value) => {
+                        // 监听者，监听来自set回调函数的发布
+                        this.$watch.on(value, () => {
+                            node.textContent = self.$data[value]
+                        })
+                        console.log(matched, value)
+                        
+                        // 监听者
+                        return this[value]
+                    })
+                    
+                }
+            }
+        }
+
+        class Observer {
+            constructor() {
+                // 空的队列
+                // 事件队列，发布者和订阅者的供需关系来去决定去向
+                this.list = {
+                    // 'eat':[()=>{
+                    //     console.log('eat')
+                    // }]
+                }
+            }
+            // 监听 订阅者
+            on(key, fn) {
+                if (!this.list[key]) {
+                    this.list[key] = [];
+                }
+                this.list[key].push(fn);
+            }
+            // 触发 发布者
+            emit(key, params) {
+                // 把所有存着回调函数的数组给取出来
+                let fns = this.list[key];
+                // 如果数组队列为空，则返回
+                if (!fns || fns.length === 0) {
+                    return false;
+                }
+                // 如果不为空，我就遍历所有的函数执行
+                fns.forEach(fn => {
+                    fn(params);
+                });
+            }
+        }
+
+        let vm = new Vue({
+            el: "#demo",
+            data: {
+                name: "lemon",
+                html:`<p style='color:red'>123</p>`
+            },
+            created() {
+                
+            },
+            beforeCreated() {
+                
+            },
+            mounted(){
+                console.log("挂载之后")
+                this.name = "laoxie"
+            }
+        })
+
+        console.log(vm)
+    </script>
+</body>
+
+</html>

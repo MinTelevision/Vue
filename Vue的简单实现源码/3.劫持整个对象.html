@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let obj = {
+            name: "lemon",
+            age: 18
+        }
+        // 劫持对象所有值
+        // 这是vue的性能一个所在点
+        // 如果你是深度遍历这个对象，那会对性能有所损耗
+        // 不要在data里面放入太多不变数据
+        // for (o in obj) {
+        //     console.log(o)
+        //     // Object.defineProperty监听对象
+        //     Object.defineProperty(obj, o, {
+        //         // 数据一旦变动，我们触发了set的回调，视图就会发生改变
+        //         // 响应数据的改变触发对应的set和get完成对应逻辑
+        //         set(newValue) {
+        //             console.log("值发生了更改", newValue)
+        //         },
+        //         get() {
+        //             console.log("我查看了该值")
+        //         }
+        //     })
+        // }
+        Object.keys(obj).forEach((key) => {
+            Object.defineProperty(obj, key, {
+                // 数据一旦变动，我们触发了set的回调，视图就会发生改变
+                // 响应数据的改变触发对应的set和get完成对应逻辑
+                set(newValue) {
+                    console.log("值发生了更改", newValue)
+                },
+                get() {
+                    console.log("我查看了该值")
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>

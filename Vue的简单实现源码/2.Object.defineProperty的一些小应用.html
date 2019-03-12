@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- V -->
+    <div id="demo"></div>
+    <script>
+        // M
+        let data = {
+            num: "laoyao",
+            age: 18,
+            obj :{
+                arr:[{
+                    
+                }]
+            }
+        }
+        // 数据劫持
+        Object.defineProperty(data, "num", {
+            // 数据一旦变动，我们触发了set的回调，视图就会发生改变
+            // 响应数据的改变触发对应的set和get完成对应逻辑
+            set(newValue) {
+                console.log("值发生了更改", newValue)
+                document.querySelector("#demo").innerHTML = newValue
+            },
+            get() {
+                console.log("我查看了该值")
+            }
+        })
+        Object.defineProperty(data, "age", {
+            // 数据一旦变动，我们触发了set的回调，视图就会发生改变
+            // 响应数据的改变触发对应的set和get完成对应逻辑
+            set(newValue) {
+                console.log("值发生了更改", newValue)
+                document.querySelector("#demo").innerHTML = newValue
+            },
+            get() {
+                console.log("我查看了该值")
+            }
+        })
+        setInterval(() => {
+            data.num = parseInt(Math.random() * 100)
+        }, 1000)
+    </script>
+</body>
+
+</html>
